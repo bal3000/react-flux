@@ -19,6 +19,16 @@ class CoursesPage extends React.Component<IProps, IState> {
     getCourses().then((courses) => this.setState({ courses }));
   }
 
+  renderRow(course: any) {
+    return (
+      <tr key={course.id}>
+        <td>{course.title}</td>
+        <td>{course.authorId}</td>
+        <td>{course.category}</td>
+      </tr>
+    );
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -31,15 +41,7 @@ class CoursesPage extends React.Component<IProps, IState> {
               <th>Category</th>
             </tr>
           </thead>
-          <tbody>
-            {this.state.courses.map((course) => (
-              <tr>
-                <td>{course.title}</td>
-                <td>{course.authorId}</td>
-                <td>{course.category}</td>
-              </tr>
-            ))}
-          </tbody>
+          <tbody>{this.state.courses.map(this.renderRow)}</tbody>
         </table>
       </React.Fragment>
     );
