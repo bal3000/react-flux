@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { match } from "react-router-dom";
 import { History, LocationState } from "history";
-import * as courseApi from "../api/courseApi";
+import CourseStore from "../stores/course.store";
+import * as courseActions from "../actions/course.actions";
 import CourseForm from "./CourseForm";
 import { IFormErrors } from "../models/form-errors.interface";
 
@@ -11,8 +12,9 @@ interface IProps {
   history: History<LocationState>;
 }
 
-const ManageCoursePage = ({ match, history }: IProps) => {
+function ManageCoursePage({ match, history }: IProps): JSX.Element {
   const [errors, setErrors] = useState({});
+  const [courses, setCourses] = useState(CourseStore.getCourses());
   const [course, setCourse] = useState({
     id: 0,
     slug: "",
@@ -22,11 +24,22 @@ const ManageCoursePage = ({ match, history }: IProps) => {
   });
 
   useEffect(() => {
+    CourseStore.addChangeListener(onChange);
     const slug = match.params.slug;
-    if (slug) {
-      courseApi.getCourseBySlug(slug).then((response) => setCourse(response));
+    if (courses.length === 0) {
+      courseActions.loadCourses();
+    } else if (slug) {
+      const _course = CourseStore.getCourseBySlug(slug);
+      if (_course) {
+        setCourse(_course);
+      }
     }
-  }, [match.params.slug]);
+    return () => CourseStore.removeChangeListener(onChange);
+  }, [courses.length, match.params.slug]);
+
+  const onChange = () => {
+    setCourses(CourseStore.getCourses());
+  };
 
   const handleChange = ({
     target,
@@ -37,7 +50,7 @@ const ManageCoursePage = ({ match, history }: IProps) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!formIsValid()) return;
-    courseApi.saveCourse(course).then(() => {
+    courseActions.saveCourse(course).then(() => {
       history.push("/courses");
       toast.success("Course saved.");
     });
@@ -64,6 +77,6 @@ const ManageCoursePage = ({ match, history }: IProps) => {
       />
     </React.Fragment>
   );
-};
+}
 
 export default ManageCoursePage;

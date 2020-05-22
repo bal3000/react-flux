@@ -5,9 +5,10 @@ import { Course } from "../models/course.interface";
 
 interface IProps {
   courses: Course[];
+  onDelete: (courseId: number) => void;
 }
 
-function CourseList({ courses }: IProps): JSX.Element {
+function CourseList({ courses, onDelete }: IProps): JSX.Element {
   const renderRow = (course: any) => {
     return (
       <tr key={course.id}>
@@ -16,6 +17,15 @@ function CourseList({ courses }: IProps): JSX.Element {
         </td>
         <td>{course.authorId}</td>
         <td>{course.category}</td>
+        <td>
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => onDelete(course.id)}
+          >
+            Delete
+          </button>
+        </td>
       </tr>
     );
   };
@@ -28,6 +38,7 @@ function CourseList({ courses }: IProps): JSX.Element {
             <th>Title</th>
             <th>Author ID</th>
             <th>Category</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>{courses.map(renderRow)}</tbody>
@@ -45,6 +56,7 @@ CourseList.propTypes = {
       category: PropTypes.string.isRequired,
     })
   ).isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default CourseList;
