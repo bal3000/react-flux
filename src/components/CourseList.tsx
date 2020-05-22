@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 interface IProps {
   courses: any[];
@@ -9,7 +10,9 @@ function CourseList({ courses }: IProps): JSX.Element {
   const renderRow = (course: any) => {
     return (
       <tr key={course.id}>
-        <td>{course.title}</td>
+        <td>
+          <Link to={`/course/${course.slug}`}>{course.title}</Link>
+        </td>
         <td>{course.authorId}</td>
         <td>{course.category}</td>
       </tr>
