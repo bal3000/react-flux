@@ -1,51 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { getCourses } from "../api/courseApi";
+import CourseList from "./CourseList";
 
-interface IProps {}
+function CoursesPage(): JSX.Element {
+  const [courses, setCourses] = useState([]);
 
-interface IState {
-  courses: any[];
-}
+  useEffect(() => {
+    getCourses().then((c) => setCourses(c));
+  }, []);
 
-class CoursesPage extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      courses: [],
-    };
-  }
-
-  componentDidMount() {
-    getCourses().then((courses) => this.setState({ courses }));
-  }
-
-  renderRow(course: any) {
-    return (
-      <tr key={course.id}>
-        <td>{course.title}</td>
-        <td>{course.authorId}</td>
-        <td>{course.category}</td>
-      </tr>
-    );
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <h2>Courses</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Author ID</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody>{this.state.courses.map(this.renderRow)}</tbody>
-        </table>
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <h2>Courses</h2>
+      <CourseList courses={courses} />
+    </React.Fragment>
+  );
 }
 
 export default CoursesPage;
