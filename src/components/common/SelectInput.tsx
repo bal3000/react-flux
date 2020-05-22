@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { IFormInputProps } from "../../models/props/form-input-props.interface";
 
-function TextInput(props: IFormInputProps<HTMLInputElement>): JSX.Element {
+function SelectInput(props: IFormInputProps<HTMLSelectElement>): JSX.Element {
   let wrapperClass = "form-group";
   if (props.error && props.error.length > 0) {
     wrapperClass += " has-error";
@@ -12,31 +12,40 @@ function TextInput(props: IFormInputProps<HTMLInputElement>): JSX.Element {
     <div className={wrapperClass}>
       <label htmlFor={props.id}>{props.label}</label>
       <div className="field">
-        <input
+        <select
           id={props.id}
-          type="text"
           name={props.name}
-          className="form-control"
           onChange={props.onChange}
           value={props.value}
-        />
+          className="form-control"
+        >
+          <option value="" />
+          {props.options
+            ? props.options.map((opt, index) => (
+                <option key={index + 1} value={index + 1}>
+                  {opt}
+                </option>
+              ))
+            : null}
+        </select>
       </div>
       {props.error && <div className="alert alert-danger">{props.error}</div>}
     </div>
   );
 }
 
-TextInput.propTypes = {
+SelectInput.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  options: PropTypes.array.isRequired,
   value: PropTypes.string,
   error: PropTypes.string,
 };
 
-TextInput.defaultProps = {
+SelectInput.defaultProps = {
   error: "",
 };
 
-export default TextInput;
+export default SelectInput;
