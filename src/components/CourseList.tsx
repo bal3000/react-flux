@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { Course } from "../models/course.interface";
 
 interface IProps {
-  courses: any[];
+  courses: Course[];
 }
 
 function CourseList({ courses }: IProps): JSX.Element {
